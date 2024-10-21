@@ -3,24 +3,28 @@ package com.dicoding.storyapp.ui.register
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.dicoding.storyapp.R
-import com.dicoding.storyapp.databinding.ActivityLoginBinding
+import androidx.lifecycle.lifecycleScope
+import com.dicoding.storyapp.ViewModelFactory
+import com.dicoding.storyapp.data.Results
 import com.dicoding.storyapp.databinding.ActivityRegisterBinding
 import com.dicoding.storyapp.ui.customview.EmailEditText
-import com.dicoding.storyapp.ui.customview.LoginButton
 import com.dicoding.storyapp.ui.customview.PasswordEditText
 import com.dicoding.storyapp.ui.customview.RegisterButton
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var registerButton: RegisterButton
     private lateinit var emailEditText: EmailEditText
     private lateinit var passwordEditText: PasswordEditText
+
+    private val registerViewModel: RegisterViewModel by viewModels {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,15 +34,21 @@ class RegisterActivity : AppCompatActivity() {
         registerButton = binding.registerButton
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
-        var nameEditText = binding.nameEditText
 
         registerButton.isEnabled = false
 
         emailEditText.addTextChangedListener(registerTextWatcher)
         passwordEditText.addTextChangedListener(registerTextWatcher)
 
-        registerButton.setOnClickListener {
-            Toast.makeText(this, "Email: ${emailEditText.text} ,Password: ${passwordEditText.text}, Name: ${nameEditText.text} ", Toast.LENGTH_SHORT).show()
+        binding.registerButton.setOnClickListener {
+            val name = binding.nameEditText.text.toString()
+            val email = binding.emailEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+
+            Log.d("RegisterActivity", "$name, $email, $password")
+            registerViewModel.register(name, email, password)
+            observeRegisterResult()
+            Log.d("RegisterActivity", "$name, $email, $password")
         }
     }
 
@@ -60,5 +70,37 @@ class RegisterActivity : AppCompatActivity() {
         val isPasswordValid = password.length >= 8
 
         registerButton.isEnabled = isEmailValid && isPasswordValid && (binding.nameEditTextLayout.toString().isNotEmpty())
+    }
+
+    private fun observeRegisterResult() {
+        lifecycleScope.launch {
+            registerViewModel.registerResult.collect { results ->
+                when (results) {
+                    is Results.Loading -> {
+                        showLoading(true)
+                    }
+                    is Results.Success -> {
+                        showLoading(false)
+                        Log.d("RegisterActivity", "Register success: ${results.data.message}")
+                        Toast.makeText(this@RegisterActivity, "Register success: ${results.data.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    is Results.Error -> {
+                        showLoading(false)
+                        Log.e("RegisterActivity", "Error: ${results.error}")
+                        Toast.makeText(this@RegisterActivity, "Error: ${results.error}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = android.view.View.VISIBLE
+            binding.registerButton.isEnabled = false
+        } else {
+            binding.progressBar.visibility = android.view.View.GONE
+            binding.registerButton.isEnabled = true
+        }
     }
 }

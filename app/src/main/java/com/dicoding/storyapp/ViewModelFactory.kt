@@ -8,6 +8,7 @@ import com.dicoding.storyapp.data.local.pref.UserPref
 import com.dicoding.storyapp.data.local.pref.dataStore
 import com.dicoding.storyapp.di.Injection
 import com.dicoding.storyapp.ui.main.MainViewModel
+import com.dicoding.storyapp.ui.register.RegisterViewModel
 
 class ViewModelFactory(private val repository: AppRepository, preferences: UserPref) :
     ViewModelProvider.Factory {
@@ -17,6 +18,11 @@ class ViewModelFactory(private val repository: AppRepository, preferences: UserP
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
+                RegisterViewModel(repository) as T
+            }
+
+
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

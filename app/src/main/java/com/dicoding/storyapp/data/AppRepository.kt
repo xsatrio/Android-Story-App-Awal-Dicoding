@@ -2,6 +2,7 @@ package com.dicoding.storyapp.data
 
 import com.dicoding.storyapp.data.local.pref.UserModel
 import com.dicoding.storyapp.data.local.pref.UserPref
+import com.dicoding.storyapp.data.remote.response.RegisterResponse
 import com.dicoding.storyapp.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +20,15 @@ class AppRepository(
 
     suspend fun logout() {
         pref.logout()
+    }
+
+    suspend fun register(name: String, email: String, password: String): Results<RegisterResponse> {
+        return try {
+            val response = apiService.register(name, email, password)
+            Results.Success(response)
+        } catch (e: Exception) {
+            Results.Error(e.message ?: "An error occurred")
+        }
     }
 
     companion object {
