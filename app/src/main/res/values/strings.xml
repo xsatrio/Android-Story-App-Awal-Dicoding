@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Story App</string>
+    <string name="title_welcome_page">Welcome to Story App Dicoding</string>
+    <string name="message_welcome_page">Lets upload your stories to Story App Dicoding</string>
+    <string name="login">Login</string>
+    <string name="signup">Register</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>
