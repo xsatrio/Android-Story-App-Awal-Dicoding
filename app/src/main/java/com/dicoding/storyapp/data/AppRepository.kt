@@ -1,9 +1,13 @@
 package com.dicoding.storyapp.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import com.dicoding.storyapp.data.pref.UserPref
+import com.dicoding.storyapp.data.remote.response.ListStoryItem
 import com.dicoding.storyapp.data.remote.response.LoginResponse
 import com.dicoding.storyapp.data.remote.response.RegisterResponse
 import com.dicoding.storyapp.data.remote.retrofit.ApiService
+import kotlinx.coroutines.flow.first
 
 class AppRepository(
     private val apiService: ApiService,
@@ -28,6 +32,22 @@ class AppRepository(
             Results.Success(response)
         } catch (e: Exception) {
             Results.Error(e.message ?: "An error occurred")
+        }
+    }
+
+    fun getAllStories(): LiveData<Results<List<ListStoryItem>>> = liveData {
+        emit(Results.Loading)
+        try {
+            val token = pref.getToken().first()
+            val response = apiService.getAllStories(
+                token = "Bearer $token",
+                page = null,
+                size = null,
+                location = 0
+            )
+            emit(Results.Success(response.listStory))
+        } catch (e: Exception) {
+            emit(Results.Error(e.message.toString()))
         }
     }
 
