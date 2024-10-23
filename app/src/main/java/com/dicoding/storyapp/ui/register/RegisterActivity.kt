@@ -12,6 +12,7 @@ import com.dicoding.storyapp.ViewModelFactory
 import com.dicoding.storyapp.data.Results
 import com.dicoding.storyapp.databinding.ActivityRegisterBinding
 import com.dicoding.storyapp.ui.customview.EmailEditText
+import com.dicoding.storyapp.ui.customview.NameEditText
 import com.dicoding.storyapp.ui.customview.PasswordEditText
 import com.dicoding.storyapp.ui.customview.RegisterButton
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var registerButton: RegisterButton
+    private lateinit var nameEditText: NameEditText
     private lateinit var emailEditText: EmailEditText
     private lateinit var passwordEditText: PasswordEditText
 
@@ -32,11 +34,13 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         registerButton = binding.registerButton
+        nameEditText = binding.nameEditText
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
 
         registerButton.isEnabled = false
 
+        nameEditText.addTextChangedListener(registerTextWatcher)
         emailEditText.addTextChangedListener(registerTextWatcher)
         passwordEditText.addTextChangedListener(registerTextWatcher)
 
@@ -63,13 +67,15 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun validateFields() {
+        val name = nameEditText.text.toString()
         val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
 
+        val isNameValid = name.isNotEmpty()
         val isEmailValid = email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
         val isPasswordValid = password.length >= 8
 
-        registerButton.isEnabled = isEmailValid && isPasswordValid && (binding.nameEditTextLayout.toString().isNotEmpty())
+        registerButton.isEnabled = isNameValid && isEmailValid && isPasswordValid
     }
 
     private fun observeRegisterResult() {

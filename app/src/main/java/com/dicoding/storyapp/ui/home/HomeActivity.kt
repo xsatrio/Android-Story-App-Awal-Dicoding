@@ -16,17 +16,16 @@ class HomeActivity : AppCompatActivity() {
     private val viewModel by viewModels<HomeViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private lateinit var storyAdapter: StoriesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val storyAdapter = StoriesAdapter { storyId ->
-            // Handle item click, e.g., navigate to detail screen
-        }
+        storyAdapter = StoriesAdapter()
 
-        viewModel.getAllStories.observe(this) {result ->
+        viewModel.getAllStories.observe(this) { result ->
             when (result) {
                 is Results.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Results.Success -> {
@@ -43,7 +42,7 @@ class HomeActivity : AppCompatActivity() {
 
         binding.rvStory.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = storyAdapter
+            adapter = storyAdapter  // Set the adapter after initialization
         }
     }
 }

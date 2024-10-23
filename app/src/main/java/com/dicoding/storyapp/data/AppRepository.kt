@@ -1,11 +1,13 @@
 package com.dicoding.storyapp.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.dicoding.storyapp.data.pref.UserPref
 import com.dicoding.storyapp.data.remote.response.ListStoryItem
 import com.dicoding.storyapp.data.remote.response.LoginResponse
 import com.dicoding.storyapp.data.remote.response.RegisterResponse
+import com.dicoding.storyapp.data.remote.response.Story
 import com.dicoding.storyapp.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.first
 
@@ -47,6 +49,28 @@ class AppRepository(
             )
             emit(Results.Success(response.listStory))
         } catch (e: Exception) {
+            emit(Results.Error(e.message.toString()))
+        }
+    }
+
+    fun getDetailStory(storyId: String): LiveData<Results<Story>> = liveData {
+        emit(Results.Loading)
+        try {
+            val token = pref.getToken().first()
+            Log.d("AppRepository", "Bearer token: $token")
+            val response = apiService.getDetailStory(
+                token = "Bearer $token",
+                id = storyId
+            )
+            Log.d("DetailStory", response.toString())
+            val story = response.story
+            if (story != null) {
+                emit(Results.Success(story))
+            } else {
+                emit(Results.Error("Story not found"))
+            }
+        } catch (e: Exception) {
+            Log.d("DetailStory", e.toString())
             emit(Results.Error(e.message.toString()))
         }
     }
