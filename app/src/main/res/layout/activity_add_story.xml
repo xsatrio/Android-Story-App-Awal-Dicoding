@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.addstory.AddStoryActivity">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/previewImageView"
         android:layout_width="0dp"
@@ -38,6 +48,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/descriptionEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/description"

@@ -8,8 +8,13 @@ import com.dicoding.storyapp.data.remote.response.ListStoryItem
 import com.dicoding.storyapp.data.remote.response.LoginResponse
 import com.dicoding.storyapp.data.remote.response.RegisterResponse
 import com.dicoding.storyapp.data.remote.response.Story
+import com.dicoding.storyapp.data.remote.response.StoryUploadResponse
 import com.dicoding.storyapp.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.first
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.HttpException
+import java.io.IOException
 
 class AppRepository(
     private val apiService: ApiService,
@@ -72,6 +77,31 @@ class AppRepository(
         } catch (e: Exception) {
             Log.d("DetailStory", e.toString())
             emit(Results.Error(e.message.toString()))
+        }
+    }
+
+    suspend fun uploadStory(
+        description: String,
+        photo: MultipartBody.Part,
+        lat: RequestBody?,
+        lon: RequestBody?
+    ): Results<StoryUploadResponse> {
+        return try {
+            val token = pref.getToken().first()
+            Log.d("AppRepository", "Bearer token: $token")
+            val response = apiService.uploadStory("Bearer $token", description, photo, lat, lon)
+
+            if (!response.error!!) {
+                Results.Success(response)
+            } else {
+                Results.Error(response.message ?: "Unknown error occurred")
+            }
+        } catch (e: IOException) {
+            Results.Error("Network error: ${e.message}")
+        } catch (e: HttpException) {
+            Results.Error("HTTP error: ${e.message}")
+        } catch (e: Exception) {
+            Results.Error("An unexpected error occurred: ${e.message}")
         }
     }
 

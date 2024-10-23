@@ -21,12 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkLoginStatus()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        userPref = UserPref.getInstance(dataStore)
-
-        checkLoginStatus()
 
         binding.loginButton.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -38,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkLoginStatus() {
+        userPref = UserPref.getInstance(dataStore)
         lifecycleScope.launch {
             userPref.getToken().collect { token ->
                 if (!token.isNullOrEmpty()) {
