@@ -20,6 +20,12 @@ class UserPref private constructor(private val dataStore: DataStore<Preferences>
         }
     }
 
+    suspend fun clearToken() {
+        dataStore.edit { preferences ->
+            preferences.remove(TOKEN_KEY)
+        }
+    }
+
     companion object {
         private val TOKEN_KEY = stringPreferencesKey("token")
         @Volatile
