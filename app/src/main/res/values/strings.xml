@@ -10,4 +10,8 @@
     <string name="mediaCover">ImageView</string>
     <string name="error">Invalid Id / Token</string>
     <string name="menu_1">Logout</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="camera">Camera</string>
+    <string name="description">Description</string>
 </resources>
