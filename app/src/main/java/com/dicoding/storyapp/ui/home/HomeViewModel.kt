@@ -6,7 +6,6 @@ import com.dicoding.storyapp.data.AppRepository
 import com.dicoding.storyapp.data.Results
 import com.dicoding.storyapp.data.remote.response.ListStoryItem
 
-class HomeViewModel(repository: AppRepository): ViewModel() {
-    val getAllStories: LiveData<Results<List<ListStoryItem>>> =
-        repository.getAllStories()
+class HomeViewModel(repository: AppRepository) : ViewModel() {
+    val getAllStories: LiveData<Results<List<ListStoryItem>>> = repository.getAllStories()
 }

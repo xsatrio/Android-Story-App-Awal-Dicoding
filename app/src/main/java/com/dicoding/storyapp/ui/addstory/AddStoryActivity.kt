@@ -20,10 +20,12 @@ import com.dicoding.storyapp.databinding.ActivityAddStoryBinding
 import com.dicoding.storyapp.helper.reduceFileImage
 import com.dicoding.storyapp.helper.uriToFile
 import com.dicoding.storyapp.ui.addstory.CameraActivity.Companion.CAMERAX_RESULT
+import com.dicoding.storyapp.ui.home.HomeActivity
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
@@ -65,40 +67,49 @@ class AddStoryActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.isLoading.observe(this) { isLoading ->
+            showLoading(isLoading)
+        }
+
         viewModel.uploadResult.observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is Results.Loading -> {
-                        showLoading(true)
+            when (result) {
+                is Results.Loading -> showLoading(true)
+                is Results.Success -> {
+                    result.data.message?.let {
+                        Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
                     }
-
-                    is Results.Success -> {
-                        result.data.message?.let {
-                            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT)
-                                .show()
-                        }
-                        showLoading(false)
-                    }
-
-                    is Results.Error -> {
-                        Snackbar.make(binding.root, result.error, Snackbar.LENGTH_SHORT)
-                            .show()
-                        showLoading(false)
-                    }
+                    showLoading(false)
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                is Results.Error -> {
+                    Snackbar.make(binding.root, result.error, Snackbar.LENGTH_SHORT).show()
+                    showLoading(true)
                 }
             }
         }
+
 
         binding.galleryBtn.setOnClickListener { startGallery() }
         binding.cameraBtn.setOnClickListener { startCameraX() }
         binding.uploadBtn.setOnClickListener { uploadImage() }
     }
 
-    private fun showLoading(b: Boolean) {
-        binding.progressIndicator.visibility = if (b) View.VISIBLE else View.GONE
-    }
-
     private fun uploadImage() {
+        val description = binding.descriptionEdt.text.toString()
+        if (description.isEmpty()) {
+            Snackbar.make(binding.root, "Description is empty", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+        val descriptionReqBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        if (currentImageUri == null) {
+            Snackbar.make(binding.root, "Please select or capture an image", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
         val imageFile = uriToFile(currentImageUri!!, this)
         val compressedImage = imageFile.reduceFileImage()
         val photoRequestBody = compressedImage.asRequestBody("image/jpeg".toMediaTypeOrNull())
@@ -108,11 +119,11 @@ class AddStoryActivity : AppCompatActivity() {
                 compressedImage.name,
                 photoRequestBody
             )
-        val description = binding.descriptionEdt.text.toString().trim()
+
         val lat = null
         val lon = null
 
-        viewModel.uploadStory(description, photoMultipart, lat, lon)
+        viewModel.uploadStory(descriptionReqBody, photoMultipart, lat, lon)
     }
 
     private fun showImage() {
@@ -154,6 +165,13 @@ class AddStoryActivity : AppCompatActivity() {
             currentImageUri = uri
             showImage()
         }
+    }
+
+    private fun showLoading(b: Boolean) {
+        binding.progressIndicator.visibility = if (b) View.VISIBLE else View.GONE
+        binding.uploadBtn.isEnabled = !b
+        binding.cameraBtn.isEnabled = !b
+        binding.galleryBtn.isEnabled = !b
     }
 
     companion object {

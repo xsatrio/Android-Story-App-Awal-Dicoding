@@ -81,7 +81,7 @@ class AppRepository(
     }
 
     suspend fun uploadStory(
-        description: String,
+        description: RequestBody,
         photo: MultipartBody.Part,
         lat: RequestBody?,
         lon: RequestBody?

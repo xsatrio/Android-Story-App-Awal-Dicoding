@@ -32,7 +32,7 @@ class AddStoryViewModel(private val repository: AppRepository): ViewModel() {
     }
 
     fun uploadStory(
-        description: String,
+        description: RequestBody,
         photo: MultipartBody.Part,
         lat: RequestBody?,
         lon: RequestBody?
