@@ -1,18 +1,23 @@
 package com.dicoding.storyapp.ui.login
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.storyapp.R
 import com.dicoding.storyapp.ViewModelFactory
 import com.dicoding.storyapp.databinding.ActivityLoginBinding
 import com.dicoding.storyapp.ui.customview.EmailEditText
 import com.dicoding.storyapp.ui.customview.LoginButton
 import com.dicoding.storyapp.ui.customview.PasswordEditText
 import com.dicoding.storyapp.ui.home.HomeActivity
+import com.dicoding.storyapp.widget.StoryAppWidget
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -71,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
 
             viewModel.login(email, password, onSuccess = {
                 showLoading(false)
+                updateWidget()
                 Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
                 val homeIntent = Intent(this, HomeActivity::class.java)
                 homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -91,5 +97,20 @@ class LoginActivity : AppCompatActivity() {
             binding.progressBar.visibility = android.view.View.GONE
             binding.loginButton.isEnabled = true
         }
+    }
+
+    private fun updateWidget() {
+        val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(
+            ComponentName(application, StoryAppWidget::class.java)
+        )
+        AppWidgetManager.getInstance(application).notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+        Log.d("HomeActivity", "Widget IDs: ${ids.joinToString()}")
+        val intent = Intent(this, StoryAppWidget::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            Log.d("HomeActivity", "Sending broadcast for widget update")
+        }
+        sendBroadcast(intent)
+        Log.d("HomeActivity", "Broadcast sent for widget update")
     }
 }

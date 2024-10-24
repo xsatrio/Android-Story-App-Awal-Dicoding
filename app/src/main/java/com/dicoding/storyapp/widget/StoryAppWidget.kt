@@ -1,11 +1,13 @@
 package com.dicoding.storyapp.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import com.dicoding.storyapp.R
+import com.dicoding.storyapp.ui.main.MainActivity
 
 class StoryAppWidget : AppWidgetProvider() {
 
@@ -40,6 +42,15 @@ internal fun updateAppWidget(
     val views = RemoteViews(context.packageName, R.layout.story_widget)
     views.setRemoteAdapter(R.id.stack_view, intent)
     views.setEmptyView(R.id.stack_view, R.id.empty_view)
+    views.setEmptyView(R.id.stack_view, R.id.loginBtn)
+
+    val loginIntent = Intent(context, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(
+        context, 0, loginIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+
+    // Set the PendingIntent to loginBtn
+    views.setOnClickPendingIntent(R.id.loginBtn, pendingIntent)
 
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
