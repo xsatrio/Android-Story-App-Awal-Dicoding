@@ -1,7 +1,10 @@
 package com.dicoding.storyapp.ui.home
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +21,7 @@ import com.dicoding.storyapp.databinding.ActivityHomeBinding
 import com.dicoding.storyapp.ui.adapter.StoriesAdapter
 import com.dicoding.storyapp.ui.addstory.AddStoryActivity
 import com.dicoding.storyapp.ui.main.MainActivity
+import com.dicoding.storyapp.widget.StoryAppWidget
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -43,6 +47,7 @@ class HomeActivity : AppCompatActivity() {
 
                     Snackbar.make(binding.root, "Logged out successfully", Snackbar.LENGTH_SHORT)
                         .show()
+                    updateWidget()
                     delay(1000)
                     val intent = Intent(this@HomeActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -64,6 +69,7 @@ class HomeActivity : AppCompatActivity() {
         storyAdapter = StoriesAdapter()
 
         observeViewModel()
+        updateWidget()
 
         binding.fab.setOnClickListener {
             val intent = Intent(this, AddStoryActivity::class.java)
@@ -92,6 +98,21 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun updateWidget() {
+        val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(
+            ComponentName(application, StoryAppWidget::class.java)
+        )
+        AppWidgetManager.getInstance(application).notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+        Log.d("HomeActivity", "Widget IDs: ${ids.joinToString()}")
+        val intent = Intent(this, StoryAppWidget::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            Log.d("HomeActivity", "Sending broadcast for widget update")
+        }
+        sendBroadcast(intent)
+        Log.d("HomeActivity", "Broadcast sent for widget update")
     }
 
     override fun onResume() {

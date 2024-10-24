@@ -11,6 +11,7 @@ import com.dicoding.storyapp.data.remote.response.Story
 import com.dicoding.storyapp.data.remote.response.StoryUploadResponse
 import com.dicoding.storyapp.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
@@ -18,7 +19,7 @@ import java.io.IOException
 
 class AppRepository(
     private val apiService: ApiService,
-    private val pref: UserPref
+    val pref: UserPref
 ) {
     suspend fun login(email: String, password: String): Results<LoginResponse> {
         return try {
@@ -104,6 +105,22 @@ class AppRepository(
             Results.Error("An unexpected error occurred: ${e.message}")
         }
     }
+
+    fun getAllStoriesWidget(): Results<List<ListStoryItem>> = runBlocking {
+        try {
+            val token = pref.getToken().first()
+            val response = apiService.getAllStories(
+                token = "Bearer $token",
+                page = null,
+                size = null,
+                location = 0
+            )
+            Results.Success(response.listStory)
+        } catch (e: Exception) {
+            Results.Error(e.message.toString())
+        }
+    }
+
 
     companion object {
         @Volatile

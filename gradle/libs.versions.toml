@@ -12,6 +12,9 @@ constraintlayout = "2.1.4"
 kotlinxCoroutinesCore = "1.5.2"
 kotlinxCoroutinesAndroid = "1.5.2"
 cameraxVersion = "1.2.3"
+picasso = "2.71828"
+gpuImage = "2.1.0"
+picassoTransformations = "2.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,6 +30,10 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
 camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraxVersion" }
 camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraxVersion" }
+picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
+picasso-transformations = { module = "jp.wasabeef:picasso-transformations", version.ref = "picassoTransformations" }
+gpuimage = { group = "jp.co.cyberagent.android", name = "gpuimage", version.ref = "gpuImage" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

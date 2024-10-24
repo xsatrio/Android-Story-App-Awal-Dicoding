@@ -65,4 +65,9 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
+
+
+    implementation(libs.picasso.transformations)
+    implementation(libs.picasso)
+    implementation(libs.gpuimage)
 }
