@@ -25,6 +25,7 @@ import com.dicoding.storyapp.widget.StoryAppWidget
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.provider.Settings
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -41,11 +42,16 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu1 -> {
+                val intent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                startActivity(intent)
+                true
+            }
+            R.id.menu2 -> {
                 lifecycleScope.launch {
                     val userPref = UserPref.getInstance(dataStore)
                     userPref.clearToken()
 
-                    Snackbar.make(binding.root, "Logged out successfully", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(binding.root, R.string.logout_success, Snackbar.LENGTH_SHORT)
                         .show()
                     updateWidget()
                     delay(1000)
@@ -56,7 +62,6 @@ class HomeActivity : AppCompatActivity() {
                 }
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -105,14 +110,14 @@ class HomeActivity : AppCompatActivity() {
             ComponentName(application, StoryAppWidget::class.java)
         )
         AppWidgetManager.getInstance(application).notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
-        Log.d("HomeActivity", "Widget IDs: ${ids.joinToString()}")
+        Log.d("Loginctivity", "Widget IDs: ${ids.joinToString()}")
         val intent = Intent(this, StoryAppWidget::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-            Log.d("HomeActivity", "Sending broadcast for widget update")
+            Log.d("Loginctivity", "Sending broadcast for widget update")
         }
         sendBroadcast(intent)
-        Log.d("HomeActivity", "Broadcast sent for widget update")
+        Log.d("Loginctivity", "Broadcast sent for widget update")
     }
 
     override fun onResume() {

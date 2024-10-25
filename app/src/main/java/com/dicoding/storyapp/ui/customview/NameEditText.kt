@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import com.dicoding.storyapp.R
 
 class NameEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -33,7 +34,7 @@ class NameEditText @JvmOverloads constructor(
     private fun validateName() {
         val name = text?.toString()
         if (name.isNullOrEmpty()) {
-            error = "Name cant be empty"
+            error = context.getString(R.string.name_empty_error)
         }
     }
 }

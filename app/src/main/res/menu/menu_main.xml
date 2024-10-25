@@ -4,6 +4,11 @@
     <group android:menuCategory="container">
         <item
             android:id="@+id/menu1"
+            android:icon="@drawable/ic_language"
+            android:title="@string/menu_2"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menu2"
             android:icon="@drawable/ic_logout"
             android:title="@string/menu_1"
             app:showAsAction="ifRoom" />

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.dicoding.storyapp.R
 import com.dicoding.storyapp.ViewModelFactory
 import com.dicoding.storyapp.data.Results
 import com.dicoding.storyapp.databinding.ActivityRegisterBinding
@@ -88,12 +89,12 @@ class RegisterActivity : AppCompatActivity() {
                     is Results.Success -> {
                         showLoading(false)
                         Log.d("RegisterActivity", "Register success: ${results.data.message}")
-                        Toast.makeText(this@RegisterActivity, "Register success: ${results.data.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RegisterActivity, getString(R.string.register_success) + results.data.message, Toast.LENGTH_SHORT).show()
                     }
                     is Results.Error -> {
                         showLoading(false)
                         Log.e("RegisterActivity", "Error: ${results.error}")
-                        Toast.makeText(this@RegisterActivity, "Error: ${results.error}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RegisterActivity, getString(R.string.register_error) + results.error, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

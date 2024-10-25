@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.dicoding.storyapp.R
 import com.dicoding.storyapp.ViewModelFactory
 import com.dicoding.storyapp.data.Results
 import com.dicoding.storyapp.databinding.ActivityAddStoryBinding
@@ -39,9 +40,9 @@ class AddStoryActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.permission_request_granted, Toast.LENGTH_LONG).show()
             } else {
-                Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.permission_request_denied, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -56,9 +57,9 @@ class AddStoryActivity : AppCompatActivity() {
         binding = ActivityAddStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (!allPermissionsGranted()) {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
-        }
+//        if (!allPermissionsGranted()) {
+//            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+//        }
 
         viewModel.imageUri.observe(this) { uri ->
             if (uri != null) {
@@ -100,13 +101,13 @@ class AddStoryActivity : AppCompatActivity() {
     private fun uploadImage() {
         val description = binding.descriptionEdt.text.toString()
         if (description.isEmpty()) {
-            Snackbar.make(binding.root, "Description is empty", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, R.string.empty_description, Snackbar.LENGTH_SHORT).show()
             return
         }
         val descriptionReqBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
 
         if (currentImageUri == null) {
-            Snackbar.make(binding.root, "Please select or capture an image", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, R.string.empty_image, Snackbar.LENGTH_SHORT).show()
             return
         }
 
@@ -150,8 +151,13 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun startCameraX() {
-        val intent = Intent(this, CameraActivity::class.java)
-        launcherIntentCameraX.launch(intent)
+        if (!allPermissionsGranted()) {
+            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+        } else {
+
+            val intent = Intent(this, CameraActivity::class.java)
+            launcherIntentCameraX.launch(intent)
+        }
     }
 
     private val launcherIntentCameraX = registerForActivityResult(

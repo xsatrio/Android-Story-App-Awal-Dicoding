@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Story App</string>
     <string name="title_welcome_page">Welcome to Story App Dicoding</string>
-    <string name="message_welcome_page">Lets upload your stories to Story App Dicoding</string>
     <string name="login">Login</string>
     <string name="signup">Register</string>
     <string name="name">Name</string>
@@ -17,4 +16,23 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="permission_request_granted">Permission request granted</string>
+    <string name="permission_request_denied">Permission request denied</string>
+    <string name="empty_description">Description is empty</string>
+    <string name="empty_image">Please select or capture an image</string>
+    <string name="failed_take_picture">Failed to take picture</string>
+    <string name="failed_show_camera_preview">Failed to open camera</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="name_empty_error">Name Can\'t be empty</string>
+    <string name="password_length_error">Password must be at least 8 characters</string>
+    <string name="logout_success">Logged out successfully</string>
+    <string name="login_success">Login success</string>
+    <string name="register_success">"Register succes : "</string>
+    <string name="register_error">"Register error : "</string>
+    <string name="add_story">Add Story</string>
+    <string name="email_edit_text">Email edit text</string>
+    <string name="empty_view_text">Login first</string>
+    <string name="login_button">Login</string>
+    <string name="message_welcome_page">Let\'s upload your stories to Story App Dicoding</string>
+    <string name="menu_2">Language</string>
 </resources>

@@ -19,7 +19,7 @@ import java.io.IOException
 
 class AppRepository(
     private val apiService: ApiService,
-    val pref: UserPref
+    private val pref: UserPref
 ) {
     suspend fun login(email: String, password: String): Results<LoginResponse> {
         return try {

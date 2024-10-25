@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Patterns
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import com.dicoding.storyapp.R
 
 class EmailEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -38,7 +39,7 @@ class EmailEditText @JvmOverloads constructor(
     private fun validateEmail() {
         val email = text?.toString()
         if (!email.isNullOrEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            error = "Invalid email format"
+            error = context.getString(R.string.invalid_email)
         }
     }
 }

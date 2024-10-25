@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.dicoding.storyapp.R
 import com.dicoding.storyapp.ViewModelFactory
 import com.dicoding.storyapp.databinding.ActivityDetailBinding
+import com.dicoding.storyapp.helper.DateUtils
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -41,7 +42,7 @@ class DetailActivity : AppCompatActivity() {
                 if (storyDetail != null) {
                     binding.tvDetailName.text = storyName
                     binding.tvDetailDescription.text = storyDescription
-                    binding.tvDetailDate.text = storyDate
+                    binding.tvDetailDate.text = storyDate?.let { DateUtils.localizeDate(it) }
                     Glide.with(this)
                         .load(storyImageUrl)
                         .placeholder(R.drawable.ic_loading)

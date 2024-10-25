@@ -76,9 +76,9 @@ class LoginActivity : AppCompatActivity() {
 
             viewModel.login(email, password, onSuccess = {
                 showLoading(false)
-                updateWidget()
-                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show()
                 val homeIntent = Intent(this, HomeActivity::class.java)
+                updateWidget()
                 homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(homeIntent)
                 finish()
@@ -104,13 +104,13 @@ class LoginActivity : AppCompatActivity() {
             ComponentName(application, StoryAppWidget::class.java)
         )
         AppWidgetManager.getInstance(application).notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
-        Log.d("HomeActivity", "Widget IDs: ${ids.joinToString()}")
+        Log.d("LoginActivity", "Widget IDs: ${ids.joinToString()}")
         val intent = Intent(this, StoryAppWidget::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-            Log.d("HomeActivity", "Sending broadcast for widget update")
+            Log.d("LoginActivity", "Sending broadcast for widget update")
         }
         sendBroadcast(intent)
-        Log.d("HomeActivity", "Broadcast sent for widget update")
+        Log.d("LoginActivity", "Broadcast sent for widget update")
     }
 }

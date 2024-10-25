@@ -46,7 +46,6 @@ class StoriesAdapter : ListAdapter<ListStoryItem, StoriesAdapter.StoriesViewHold
 
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, DetailActivity::class.java)
-                // Passing the story details to the DetailActivity
                 intent.putExtra(DetailActivity.EXTRA_STORY_ID, story.id)
                 intent.putExtra(DetailActivity.EXTRA_STORY_NAME, story.name)
                 intent.putExtra(DetailActivity.EXTRA_STORY_DESCRIPTION, story.description)
