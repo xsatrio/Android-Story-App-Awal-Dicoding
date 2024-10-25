@@ -1,5 +1,7 @@
 package com.dicoding.storyapp.ui.login
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
@@ -7,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +35,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        playAnimation()
 
         loginButton = binding.loginButton
         emailEditText = binding.emailEditText
@@ -91,10 +96,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.progressBar.visibility = android.view.View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
             binding.loginButton.isEnabled = false
         } else {
-            binding.progressBar.visibility = android.view.View.GONE
+            binding.progressBar.visibility = View.GONE
             binding.loginButton.isEnabled = true
         }
     }
@@ -112,5 +117,31 @@ class LoginActivity : AppCompatActivity() {
         }
         sendBroadcast(intent)
         Log.d("LoginActivity", "Broadcast sent for widget update")
+    }
+
+    private fun playAnimation() {
+
+        val image = ObjectAnimator.ofFloat(binding.imageView, View.ALPHA, 1f).setDuration(200)
+        val emailTextView =
+            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(200)
+        val emailEditTextLayout =
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(125)
+        val passwordTextView =
+            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(125)
+        val passwordEditTextLayout =
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(125)
+        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(125)
+
+        AnimatorSet().apply {
+            playSequentially(
+                image,
+                emailTextView,
+                emailEditTextLayout,
+                passwordTextView,
+                passwordEditTextLayout,
+                login
+            )
+            startDelay = 200
+        }.start()
     }
 }

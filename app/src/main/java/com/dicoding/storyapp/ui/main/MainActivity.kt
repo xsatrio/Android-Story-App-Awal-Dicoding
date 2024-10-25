@@ -1,11 +1,13 @@
 package com.dicoding.storyapp.ui.main
 
+import android.animation.ObjectAnimator
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         updateWidget()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        playAnimation()
 
         binding.loginButton.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -66,5 +70,13 @@ class MainActivity : AppCompatActivity() {
         }
         sendBroadcast(intent)
         Log.d("HomeActivity", "Broadcast sent for widget update")
+    }
+
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
     }
 }

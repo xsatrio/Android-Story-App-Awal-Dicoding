@@ -59,11 +59,15 @@
         <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="false"
-            android:theme="@style/Base.Theme.StoryApp.Landing" />
+            android:theme="@style/Base.Theme.StoryApp.Landing"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false"
-            android:theme="@style/Base.Theme.StoryApp.Landing" />
+            android:theme="@style/Base.Theme.StoryApp.Landing"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false"
