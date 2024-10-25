@@ -35,4 +35,5 @@
     <string name="login_button">Login</string>
     <string name="message_welcome_page">Let\'s upload your stories to Story App Dicoding</string>
     <string name="menu_2">Language</string>
+    <string name="imageView">Image</string>
 </resources>

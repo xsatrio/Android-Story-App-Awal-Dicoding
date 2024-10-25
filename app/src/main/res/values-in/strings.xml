@@ -36,4 +36,5 @@
     <string name="login_button">Login</string>
     <string name="message_welcome_page">Ayo unggah ceritamu ke Aplikasi Story Dicoding</string>
     <string name="menu_2">Bahasa</string>
+    <string name="imageView">Gambar</string>
 </resources>
